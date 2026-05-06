@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getLeads, createLead, updateLead, getLeadById } from '../controllers/lead';
+import { getLeads, createLead, updateLead, getLeadById, deleteLead } from '../controllers/lead';
 import { getNotes, createNote } from '../controllers/note';
 import { protect } from '../middleware/auth';
 
@@ -13,7 +13,8 @@ router.route('/')
 
 router.route('/:id')
   .get(getLeadById)
-  .put(updateLead);
+  .put(updateLead)
+  .delete(deleteLead);
 
 router.route('/:id/notes')
   .get(getNotes)

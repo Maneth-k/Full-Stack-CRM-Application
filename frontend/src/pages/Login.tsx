@@ -22,44 +22,80 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign in to CRM</h2>
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-brand-black text-brand-white font-body-md w-full">
+      {/* Dynamic Background Element */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-orange/20 rounded-full blur-[120px] mix-blend-screen opacity-50"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-brand-orange/10 rounded-full blur-[150px] mix-blend-screen opacity-40"></div>
+        <img alt="Abstract background" className="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-overlay" src="https://lh3.googleusercontent.com/aida/ADBb0ui4hR1YE84pWZOfeM-h0-imCnkdxLLWDM1EhLMlkqXllExcvycSJinznru_ISSk_dqIcUwo9r4ZMp9P4lx_oozQDGg4oD1AumQAittB48dhew6f0a79biqckzxAniyLCG9Gx9i4quCO0QZoMnzSh2eoFUyWr-5VlrQPjxfSjdTnrYx-ryogCn4xfxstdwJDJpRtD4GmOjBfuVUEMA2r3rXgOqP2o3iQ6C6Qm0-DuymCF_1MzpY27K4IA1k" />
+      </div>
+      
+      {/* Login Container */}
+      <div className="relative z-10 w-full max-w-md p-space-lg mx-space-md">
+        {/* Brand Header */}
+        <div className="text-center mb-space-xl">
+          <h1 className="font-display-xl text-[48px] font-black leading-[1.1] text-brand-white mb-space-sm flex items-center justify-center gap-space-sm">
+            <span className="material-symbols-outlined text-[48px] text-brand-orange" style={{ fontVariationSettings: "'FILL' 1" }}>speed</span>
+            Velocity
+          </h1>
+          <p className="font-body-lg text-[18px] text-brand-text-sec">Sales Engine</p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {error && <div className="text-red-500 text-sm text-center">{error}</div>}
-          <div className="rounded-md shadow-sm -space-y-px">
+        
+        {/* Login Card */}
+        <div className="bg-[#1f1f1f]/60 backdrop-blur-md border border-[#333333] rounded-xl p-space-lg shadow-[0px_10px_40px_rgba(254,73,0,0.05)]">
+          <h2 className="font-headline-md text-[24px] font-semibold text-brand-white mb-space-lg">Sign in to Velocity</h2>
+          
+          <form className="space-y-space-md" onSubmit={handleSubmit}>
+            {error && <div className="text-red-500 text-sm text-center mb-4 bg-red-500/10 py-2 rounded">{error}</div>}
+            
+            {/* Email Field */}
             <div>
-              <input
+              <label className="block font-label-bold text-[14px] font-bold tracking-widest text-brand-text-sec mb-space-xs uppercase" htmlFor="email">Email Address</label>
+              <input 
+                className="ghost-input w-full text-brand-white font-body-md text-[16px] py-space-sm transition-colors" 
+                id="email" 
                 type="email"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
+                placeholder="name@company.com" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+            
+            {/* Password Field */}
             <div>
-              <input
+              <div className="flex justify-between items-baseline mb-space-xs">
+                <label className="block font-label-bold text-[14px] font-bold tracking-widest text-brand-text-sec uppercase" htmlFor="password">Password</label>
+                <a className="font-caption text-[12px] text-brand-orange hover:text-[#d63c00] transition-colors" href="#">Forgot Password?</a>
+              </div>
+              <input 
+                className="ghost-input w-full text-brand-white font-body-md text-[16px] py-space-sm transition-colors" 
+                id="password" 
                 type="password"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
+                placeholder="••••••••" 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+            
+            {/* Action Button */}
+            <div className="pt-space-sm mt-8">
+              <button 
+                type="submit"
+                className="w-full bg-brand-orange text-brand-white font-label-bold text-[14px] font-bold py-space-sm px-space-md rounded uppercase tracking-wider shadow-[0px_10px_20px_rgba(254,73,0,0.15)] hover:bg-[#d63c00] transition-all active:scale-95"
+              >
+                Sign In
+              </button>
+            </div>
+          </form>
+          
+          <div className="mt-space-lg text-center pt-6">
+            <p className="font-caption text-[12px] text-brand-text-sec">
+              Don't have an account? <a className="text-brand-orange hover:text-[#d63c00] transition-colors ml-unit" href="#">Create Account</a>
+            </p>
           </div>
-          <div>
-            <button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              Sign in
-            </button>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
   );

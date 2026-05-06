@@ -5,7 +5,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import Layout from './components/Layout';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
-import LeadBoard from './pages/LeadBoard';
+import KanbanBoard from './pages/KanbanBoard';
 import LeadDetail from './pages/LeadDetail';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -24,7 +24,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
             <Route index element={<Dashboard />} />
-            <Route path="leads" element={<LeadBoard />} />
+            <Route path="leads" element={<KanbanBoard />} />
             <Route path="leads/:id" element={<LeadDetail />} />
           </Route>
         </Routes>
