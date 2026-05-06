@@ -73,7 +73,15 @@ const LeadCard: React.FC<LeadCardProps> = ({ lead, onEdit, onDelete }) => {
       <p className="font-body-md text-[16px] text-brand-text-sec mb-4">{lead.company}</p>
       
       <div className="flex justify-between items-center relative z-10">
-        <div className="velocity-bar"></div>
+        <div className="flex flex-col gap-1">
+          <div className="velocity-bar w-10"></div>
+          {lead.assignedTo && typeof lead.assignedTo === 'object' && (
+            <span className="text-[12px] text-brand-text-sec flex items-center gap-1">
+              <span className="material-symbols-outlined text-[14px]">person</span>
+              {(lead.assignedTo as any).email}
+            </span>
+          )}
+        </div>
         <div className="card-menu-area relative -mr-1">
           <button
             onClick={toggleMenu}

@@ -40,8 +40,8 @@ const Layout = () => {
                 : 'text-brand-text-sec hover:text-brand-white hover:bg-brand-border/50'
             }`}
           >
-            <span className="material-symbols-outlined">handshake</span>
-            Pipeline
+            <span className="material-symbols-outlined">person</span>
+            Leads
           </Link>
         </nav>
         <div className="mt-auto space-y-4">

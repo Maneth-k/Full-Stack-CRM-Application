@@ -12,7 +12,7 @@ import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import toast from 'react-hot-toast';
 
 import api from '../api/axios';
-import type { ILead } from '../types';
+import type { ILead, IUser } from '../types';
 import KanbanColumn from '../components/KanbanColumn';
 
 const COLUMNS = ['New', 'Contacted', 'Qualified', 'Proposal Sent', 'Won', 'Lost'];
@@ -40,6 +40,9 @@ const INITIAL_FORM: LeadFormData = {
 const KanbanBoard = () => {
   const [leads, setLeads] = useState<ILead[]>([]);
   const [search, setSearch] = useState('');
+  const [sourceFilter, setSourceFilter] = useState('');
+  const [assignedToFilter, setAssignedToFilter] = useState('');
+  const [users, setUsers] = useState<IUser[]>([]);
   
   // Modal state
   const [showModal, setShowModal] = useState(false);
@@ -75,7 +78,9 @@ const KanbanBoard = () => {
 
   const fetchLeads = async () => {
     try {
-      const { data } = await api.get('/leads', { params: { search } });
+      const { data } = await api.get('/leads', { 
+        params: { search, source: sourceFilter, assignedTo: assignedToFilter } 
+      });
       setLeads(data);
     } catch (error) {
       console.error('Failed to fetch leads', error);
@@ -84,11 +89,23 @@ const KanbanBoard = () => {
   };
 
   useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const { data } = await api.get('/users');
+        setUsers(data);
+      } catch (error) {
+        console.error('Failed to fetch users', error);
+      }
+    };
+    fetchUsers();
+  }, []);
+
+  useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       fetchLeads();
     }, 300);
     return () => clearTimeout(delayDebounceFn);
-  }, [search]);
+  }, [search, sourceFilter, assignedToFilter]);
 
   // Drag and drop sensors
   const sensors = useSensors(
@@ -195,12 +212,36 @@ const KanbanBoard = () => {
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-brand-text-sec">search</span>
             <input 
               className="w-full pl-10 pr-4 py-2 ghost-input font-body-md text-[16px]" 
-              placeholder="Search leads, tasks, or contacts..." 
+              placeholder="Search name, company, email..." 
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
+          
+          <select 
+            value={sourceFilter}
+            onChange={(e) => setSourceFilter(e.target.value)}
+            className="bg-brand-surface border-b-2 border-brand-border text-brand-white font-body-md text-[14px] py-2 px-2 focus:outline-none focus:border-brand-orange"
+          >
+            <option value="" className="bg-brand-surface">All Sources</option>
+            <option value="Website" className="bg-brand-surface">Website</option>
+            <option value="LinkedIn" className="bg-brand-surface">LinkedIn</option>
+            <option value="Referral" className="bg-brand-surface">Referral</option>
+            <option value="Cold Email" className="bg-brand-surface">Cold Email</option>
+            <option value="Event" className="bg-brand-surface">Event</option>
+          </select>
+
+          <select 
+            value={assignedToFilter}
+            onChange={(e) => setAssignedToFilter(e.target.value)}
+            className="bg-brand-surface border-b-2 border-brand-border text-brand-white font-body-md text-[14px] py-2 px-2 focus:outline-none focus:border-brand-orange"
+          >
+            <option value="" className="bg-brand-surface">All Salespersons</option>
+            {users.map(u => (
+              <option key={u._id} value={u._id} className="bg-brand-surface">{u.email}</option>
+            ))}
+          </select>
         </div>
       </header>
 

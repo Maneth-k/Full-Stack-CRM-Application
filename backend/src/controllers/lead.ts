@@ -23,7 +23,7 @@ const validateEnum = (value: string, allowed: readonly string[], fieldName: stri
 
 export const getLeads = async (req: Request, res: Response) => {
   try {
-    const { search, status } = req.query;
+    const { search, status, source, assignedTo } = req.query;
     const query: any = {};
 
     // Validate optional status filter
@@ -33,10 +33,19 @@ export const getLeads = async (req: Request, res: Response) => {
       query.status = status;
     }
 
+    if (source) {
+      query.source = source;
+    }
+
+    if (assignedTo) {
+      query.assignedTo = assignedTo;
+    }
+
     if (search) {
       query.$or = [
         { name:    { $regex: search, $options: 'i' } },
         { company: { $regex: search, $options: 'i' } },
+        { email:   { $regex: search, $options: 'i' } },
       ];
     }
 
