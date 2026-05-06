@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../api/axios';
-import { ILead, INote } from '../types';
+import type { ILead, INote } from '../types';
 
-const LeadDetail = () => {
+export const LeadDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [lead, setLead] = useState<ILead | null>(null);
   const [notes, setNotes] = useState<INote[]>([]);

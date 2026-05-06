@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api/axios';
 
-const Dashboard = () => {
+export const Dashboard = () => {
   const [stats, setStats] = useState<any>(null);
 
   useEffect(() => {
