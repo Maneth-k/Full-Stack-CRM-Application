@@ -91,7 +91,7 @@ const KanbanBoard = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const { data } = await api.get('/users');
+        const { data } = await api.get('/auth/users');
         setUsers(data);
       } catch (error) {
         console.error('Failed to fetch users', error);

@@ -17,27 +17,31 @@ const Layout = () => {
     <div className="bg-brand-black text-brand-white flex min-h-screen font-sans">
       <aside className="flex flex-col h-screen fixed left-0 top-0 z-50 p-space-md bg-brand-surface border-r border-brand-border w-64">
         <div className="mb-space-xl px-2">
-          <h1 className="font-headline-lg text-[32px] font-black text-brand-orange leading-[1.2]">Velocity</h1>
-          <p className="font-caption text-[12px] text-brand-text-sec uppercase tracking-widest mt-1">High-Octane CRM</p>
+          <h1 className="font-headline-lg text-[36px] font-black text-brand-orange leading-[1.2]">
+            Velocity
+          </h1>
+          <p className="font-caption text-[16px] text-brand-text-sec uppercase tracking-widest mt-1">
+            Crystal clear sales tracking
+          </p>
         </div>
         <nav className="flex-1 space-y-1">
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className={`flex items-center gap-3 px-4 py-3 font-label-bold text-[14px] transition-all duration-150 ${
-              isActive('/') 
-                ? 'text-brand-orange border-r-2 border-brand-orange bg-brand-orange/10' 
-                : 'text-brand-text-sec hover:text-brand-white hover:bg-brand-border/50'
+              isActive("/")
+                ? "text-brand-orange border-r-2 border-brand-orange bg-brand-orange/10"
+                : "text-brand-text-sec hover:text-brand-white hover:bg-brand-border/50"
             }`}
           >
             <span className="material-symbols-outlined">dashboard</span>
             Dashboard
           </Link>
-          <Link 
-            to="/leads" 
+          <Link
+            to="/leads"
             className={`flex items-center gap-3 px-4 py-3 font-label-bold text-[14px] transition-all duration-150 ${
-              isActive('/leads') 
-                ? 'text-brand-orange border-r-2 border-brand-orange bg-brand-orange/10' 
-                : 'text-brand-text-sec hover:text-brand-white hover:bg-brand-border/50'
+              isActive("/leads")
+                ? "text-brand-orange border-r-2 border-brand-orange bg-brand-orange/10"
+                : "text-brand-text-sec hover:text-brand-white hover:bg-brand-border/50"
             }`}
           >
             <span className="material-symbols-outlined">person</span>
@@ -46,10 +50,12 @@ const Layout = () => {
         </nav>
         <div className="mt-auto space-y-4">
           <div className="flex items-center gap-3 px-4 py-3 rounded-lg text-brand-text-sec">
-            <span className="material-symbols-outlined text-2xl text-brand-orange">account_circle</span>
+            <span className="material-symbols-outlined text-2xl text-brand-orange">
+              account_circle
+            </span>
             <span className="text-sm truncate">{user?.email}</span>
           </div>
-          <button 
+          <button
             onClick={handleLogout}
             className="w-full flex items-center justify-center gap-2 px-4 py-3 text-brand-text-sec hover:text-brand-white hover:bg-brand-border/50 transition-colors rounded-lg text-left font-label-bold text-[14px]"
           >
