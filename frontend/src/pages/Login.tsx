@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import api from '../api/axios';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import api from "../api/axios";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { data } = await api.post('/auth/login', { email, password });
+      const { data } = await api.post("/auth/login", { email, password });
       login(data);
-      navigate('/');
+      navigate("/");
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Login failed');
+      setError(err.response?.data?.message || "Login failed");
     }
   };
 
@@ -30,7 +30,7 @@ const Login = () => {
         <img
           alt="Abstract background"
           className="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-overlay"
-          src="/red-and-blue-pillars-wallpaper-abstract-background-picjumbo-com.jpeg"
+          src="../../src/assets/red-and-blue-pillars-wallpaper-abstract-background-picjumbo-com.jpeg"
         />
       </div>
 
