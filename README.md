@@ -1,4 +1,4 @@
-# 🚀 Velocity CRM
+# Velocity CRM
 
 A full-stack Customer Relationship Management (CRM) application built for small sales teams. Track leads across a visual Kanban pipeline, monitor revenue metrics on a live dashboard, and manage contact activity — all from a sleek, dark-themed interface.
 
@@ -32,7 +32,7 @@ Authentication is handled via **cookie-based JWTs** (httpOnly, secure) so no tok
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 ### Backend
 | Technology | Purpose |
