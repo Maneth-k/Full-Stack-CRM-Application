@@ -51,3 +51,4 @@ app.listen(PORT, async () => {
   await seedAdmin();
   console.log(`Server running on port ${PORT}`);
 });
+export default app;
