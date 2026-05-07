@@ -76,12 +76,12 @@ export const Dashboard = () => {
   };
 
   return (
-    <div className="p-8 space-y-8 max-w-7xl mx-auto w-full font-sans">
+    <div className="p-4 md:p-8 space-y-8 max-w-7xl mx-auto w-full font-sans">
       {/* Header */}
-      <header className="flex justify-between items-center pb-2">
-        <h2 className="text-3xl font-bold text-brand-white">Dashboard Overview</h2>
-        <div className="flex items-center gap-4">
-          <button className="bg-brand-surface border border-brand-border px-4 py-2 rounded-lg text-sm flex items-center gap-2 hover:border-[#fe4900] transition-colors text-brand-white">
+      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-2">
+        <h2 className="text-2xl sm:text-3xl font-bold text-brand-white">Dashboard Overview</h2>
+        <div className="flex items-center gap-4 w-full sm:w-auto">
+          <button className="w-full sm:w-auto bg-brand-surface border border-brand-border px-4 py-2 rounded-lg text-sm flex items-center justify-center gap-2 hover:border-[#fe4900] transition-colors text-brand-white">
             <span className="material-symbols-outlined text-[18px]">calendar_today</span>
             Last 30 Days
           </button>
@@ -159,10 +159,10 @@ export const Dashboard = () => {
           />
 
           {/* Modal Panel */}
-          <div className="relative bg-brand-surface border border-brand-border rounded-xl shadow-2xl w-full max-w-4xl mx-4 p-8 z-10 max-h-[80vh] flex flex-col">
+          <div className="relative bg-brand-surface border border-brand-border rounded-xl shadow-2xl w-full max-w-4xl mx-4 p-4 sm:p-8 z-10 max-h-[80vh] flex flex-col">
             {/* Modal Header */}
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-brand-border">
-              <h2 className="text-2xl font-bold text-brand-white">{modalTitle}</h2>
+            <div className="flex items-center justify-between mb-4 sm:mb-6 pb-4 border-b border-brand-border">
+              <h2 className="text-xl sm:text-2xl font-bold text-brand-white">{modalTitle}</h2>
               <button
                 onClick={closeModal}
                 className="text-brand-text-sec hover:text-brand-white transition-colors"

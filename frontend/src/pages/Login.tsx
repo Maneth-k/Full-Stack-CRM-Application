@@ -35,9 +35,9 @@ const Login = () => {
       </div>
 
       {/* Login Container */}
-      <div className="relative z-10 w-full max-w-md p-space-lg mx-space-md">
+      <div className="relative z-10 w-full max-w-md p-4 sm:p-space-lg mx-auto">
         {/* Brand Header */}
-        <div className="text-center mb-space-xl">
+        <div className="text-center mb-8 sm:mb-space-xl">
           <h1 className="font-display-xl text-[48px] font-black leading-[1.1] text-brand-white mb-space-sm flex items-center justify-center gap-space-sm">
             Velocity
           </h1>

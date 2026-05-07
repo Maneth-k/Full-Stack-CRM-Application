@@ -55,25 +55,25 @@ export const LeadDetail = () => {
   const currentStatusIndex = COLUMNS.indexOf(lead.status) !== -1 ? COLUMNS.indexOf(lead.status) : (lead.status === 'Lost' ? 4 : 0);
 
   return (
-    <div className="flex-1 overflow-y-auto p-8 font-sans w-full">
-      <header className="mb-8 flex items-center justify-between">
-        <div className="flex items-center gap-4">
+    <div className="flex-1 overflow-y-auto p-4 md:p-8 font-sans w-full">
+      <header className="mb-6 md:mb-8 flex items-center justify-between">
+        <div className="flex items-center gap-2 sm:gap-4">
           <button onClick={() => navigate(-1)} className="text-brand-text-sec hover:text-brand-white transition-colors">
-            <span className="material-symbols-outlined text-2xl">arrow_back</span>
+            <span className="material-symbols-outlined text-xl sm:text-2xl">arrow_back</span>
           </button>
-          <h2 className="text-2xl font-bold text-brand-white tracking-tight">Lead Detailed Profile</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-brand-white tracking-tight">Lead Detailed Profile</h2>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
         {/* Left Column - Lead Information */}
         <section className="flex flex-col gap-4">
           <h3 className="text-lg font-medium text-[#e5e5e5]">Lead Information</h3>
-          <div className="bg-[#0d0d0d] border border-[#333333] rounded-xl p-6 shadow-sm">
-            <div className="flex justify-between items-start mb-8">
-              <h4 className="text-2xl font-bold text-brand-white">Profile: {lead.name}</h4>
+          <div className="bg-[#0d0d0d] border border-[#333333] rounded-xl p-4 sm:p-6 shadow-sm">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
+              <h4 className="text-xl sm:text-2xl font-bold text-brand-white">Profile: {lead.name}</h4>
               <select
-                className="bg-brand-surface border border-[#333333] text-brand-white text-sm rounded-md px-3 py-1.5 focus:outline-none focus:border-brand-orange"
+                className="w-full sm:w-auto bg-brand-surface border border-[#333333] text-brand-white text-sm rounded-md px-3 py-2 sm:py-1.5 focus:outline-none focus:border-brand-orange"
                 value={lead.status}
                 onChange={handleStatusChange}
               >
@@ -83,7 +83,7 @@ export const LeadDetail = () => {
             </div>
 
             {/* Progress Tracker */}
-            <div className="mb-10 px-4">
+            <div className="mb-10 px-2 sm:px-4">
               <div className="flex items-center justify-between relative">
                 <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-0.5 bg-[#333333] z-0"></div>
                 <div 
@@ -98,13 +98,13 @@ export const LeadDetail = () => {
 
                   return (
                     <div key={step} className="relative z-10 flex flex-col items-center">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center ring-4 ring-[#0d0d0d] transition-all
+                      <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center ring-4 ring-[#0d0d0d] transition-all
                         ${isCompleted ? 'bg-brand-orange' : isActive ? 'bg-brand-orange shadow-[0_0_10px_rgba(254,73,0,0.5)]' : isLost ? 'bg-red-500' : 'bg-[#333333]'}
                       `}>
-                        {isCompleted && <span className="material-symbols-outlined text-white text-sm">check</span>}
-                        {isLost && <span className="material-symbols-outlined text-white text-sm">close</span>}
+                        {isCompleted && <span className="material-symbols-outlined text-white text-[10px] sm:text-sm">check</span>}
+                        {isLost && <span className="material-symbols-outlined text-white text-[10px] sm:text-sm">close</span>}
                       </div>
-                      <span className={`mt-2 text-sm font-medium ${isActive || isCompleted || isLost ? 'text-brand-white' : 'text-[#a3a3a3]'}`}>
+                      <span className={`mt-2 text-[10px] sm:text-sm font-medium text-center ${isActive || isCompleted || isLost ? 'text-brand-white' : 'text-[#a3a3a3]'}`}>
                         {step}
                       </span>
                     </div>

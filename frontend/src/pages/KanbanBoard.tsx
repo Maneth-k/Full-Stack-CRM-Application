@@ -206,9 +206,9 @@ const KanbanBoard = () => {
   return (
     <div className="flex flex-col h-full bg-brand-black w-full relative">
       {/* Top Header */}
-      <header className="sticky top-0 w-full z-40 flex justify-between items-center px-space-lg py-4 bg-brand-black/80 backdrop-blur-md border-b border-brand-border">
-        <div className="flex items-center gap-space-md flex-1">
-          <div className="relative w-full max-w-md">
+      <header className="sticky top-0 w-full z-40 flex flex-col md:flex-row justify-between items-start md:items-center px-4 md:px-space-lg py-4 bg-brand-black/80 backdrop-blur-md border-b border-brand-border gap-4">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 flex-1 w-full">
+          <div className="relative w-full md:max-w-md">
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-brand-text-sec">search</span>
             <input 
               className="w-full pl-10 pr-4 py-2 ghost-input font-body-md text-[16px]" 
@@ -219,35 +219,37 @@ const KanbanBoard = () => {
             />
           </div>
           
-          <select 
-            value={sourceFilter}
-            onChange={(e) => setSourceFilter(e.target.value)}
-            className="bg-brand-surface border-b-2 border-brand-border text-brand-white font-body-md text-[14px] py-2 px-2 focus:outline-none focus:border-brand-orange"
-          >
-            <option value="" className="bg-brand-surface">All Sources</option>
-            <option value="Website" className="bg-brand-surface">Website</option>
-            <option value="LinkedIn" className="bg-brand-surface">LinkedIn</option>
-            <option value="Referral" className="bg-brand-surface">Referral</option>
-            <option value="Cold Email" className="bg-brand-surface">Cold Email</option>
-            <option value="Event" className="bg-brand-surface">Event</option>
-          </select>
+          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+            <select 
+              value={sourceFilter}
+              onChange={(e) => setSourceFilter(e.target.value)}
+              className="w-full sm:w-auto bg-brand-surface border-b-2 border-brand-border text-brand-white font-body-md text-[14px] py-2 px-2 focus:outline-none focus:border-brand-orange"
+            >
+              <option value="" className="bg-brand-surface">All Sources</option>
+              <option value="Website" className="bg-brand-surface">Website</option>
+              <option value="LinkedIn" className="bg-brand-surface">LinkedIn</option>
+              <option value="Referral" className="bg-brand-surface">Referral</option>
+              <option value="Cold Email" className="bg-brand-surface">Cold Email</option>
+              <option value="Event" className="bg-brand-surface">Event</option>
+            </select>
 
-          <select 
-            value={assignedToFilter}
-            onChange={(e) => setAssignedToFilter(e.target.value)}
-            className="bg-brand-surface border-b-2 border-brand-border text-brand-white font-body-md text-[14px] py-2 px-2 focus:outline-none focus:border-brand-orange"
-          >
-            <option value="" className="bg-brand-surface">All Salespersons</option>
-            {users.map(u => (
-              <option key={u._id} value={u._id} className="bg-brand-surface">{u.email}</option>
-            ))}
-          </select>
+            <select 
+              value={assignedToFilter}
+              onChange={(e) => setAssignedToFilter(e.target.value)}
+              className="w-full sm:w-auto bg-brand-surface border-b-2 border-brand-border text-brand-white font-body-md text-[14px] py-2 px-2 focus:outline-none focus:border-brand-orange"
+            >
+              <option value="" className="bg-brand-surface">All Salespersons</option>
+              {users.map(u => (
+                <option key={u._id} value={u._id} className="bg-brand-surface">{u.email}</option>
+              ))}
+            </select>
+          </div>
         </div>
       </header>
 
       {/* Kanban Workspace */}
-      <div className="p-space-lg flex-1 overflow-x-auto kanban-scroll bg-brand-black h-[calc(100vh-80px)]">
-        <div className="flex gap-gutter h-full min-w-max pb-8">
+      <div className="p-4 md:p-space-lg flex-1 overflow-x-auto kanban-scroll bg-brand-black h-[calc(100vh-80px)]">
+        <div className="flex gap-4 md:gap-gutter h-full min-w-max pb-8">
           <DndContext
             sensors={sensors}
             collisionDetection={closestCorners}
@@ -270,7 +272,7 @@ const KanbanBoard = () => {
       {/* FAB - Add Lead */}
       <button 
         onClick={openModal}
-        className="fixed bottom-space-lg right-space-lg h-14 w-14 rounded-full bg-brand-orange text-brand-white shadow-[0px_10px_20px_rgba(254,73,0,0.4)] flex items-center justify-center group hover:scale-110 transition-transform z-50"
+        className="fixed bottom-6 right-6 md:bottom-space-lg md:right-space-lg h-14 w-14 rounded-full bg-brand-orange text-brand-white shadow-[0px_10px_20px_rgba(254,73,0,0.4)] flex items-center justify-center group hover:scale-110 transition-transform z-50"
       >
         <span className="material-symbols-outlined text-3xl">add</span>
       </button>
@@ -279,7 +281,7 @@ const KanbanBoard = () => {
       {showModal && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={closeModal} />
-          <div className="relative bg-brand-surface border border-brand-border rounded-xl shadow-2xl w-full max-w-lg mx-4 p-8 z-10 text-brand-white">
+          <div className="relative bg-brand-surface border border-brand-border rounded-xl shadow-2xl w-full max-w-lg mx-4 p-4 sm:p-8 z-10 text-brand-white max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-8 border-b border-brand-border pb-4">
               <h2 className="font-headline-md text-[24px] font-semibold text-brand-white">
                 {editingId ? 'Edit Lead' : 'Add New Lead'}
