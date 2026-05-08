@@ -4,6 +4,12 @@ A full-stack Customer Relationship Management (CRM) application built for small 
 
 **Live Demo:** [https://full-stack-crm-application-sx7m.vercel.app/](https://full-stack-crm-application-sx7m.vercel.app/)
 
+## Demo Video
+
+> Click the thumbnail below to watch the full walkthrough on Google Drive.
+
+[![Velocity CRM Demo](https://drive.google.com/thumbnail?id=1Pzkf9Versrb0vnEoLtMvkj9929GC_7cZ&sz=w1280)](https://drive.google.com/file/d/1Pzkf9Versrb0vnEoLtMvkj9929GC_7cZ/view?usp=sharing)
+
 ---
 
 ## Table of Contents
