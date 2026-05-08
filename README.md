@@ -98,17 +98,17 @@ Authentication is handled via **cookie-based JWTs** (httpOnly, secure) so no tok
 - Inline status change via dropdown
 - **Notes / Activity Log**: timestamped internal notes per lead, showing the author's email
 
-### ⚠️ Stale Lead Detection
+### Stale Lead Detection
 - Any lead in an active pipeline stage (`Contacted`, `Qualified`, or `Proposal Sent`) that has **not had a note added in the last 5 days** is automatically flagged
-- The Kanban card receives a **glowing red border** (`ring-2 ring-red-400`) and a distinct red background (`bg-red-50`)
-- A **"⚠️ Needs Follow-up"** badge is rendered at the top of the card so it stands out at a glance
-- The stale timer **resets automatically** when any note (including a canned note) is added — the backend updates `lead.updatedAt` on every `POST /api/leads/:id/notes` request
+- The Kanban card receives a **glowing red border** 
+- A **"Needs Follow-up"** badge is rendered at the top of the card so it stands out at a glance
+- The stale timer **resets automatically** when any note (including a canned note) is added the backend updates `lead.updatedAt` on every `POST /api/leads/:id/notes` request
 - Leads with status `New`, `Won`, or `Lost` are intentionally excluded from this check
 
-### ⚡ One-Click Canned Notes
+### One-Click Canned Notes
 - Three pill-shaped quick-action buttons are displayed directly above the "Add Note" text area on the Lead Detail page
 - Available options: **Left Voicemail**, **Sent Pricing**, **Follow up next week**
-- Clicking a button immediately fires a POST request and submits the note — no typing required
+- Clicking a button immediately fires a POST request and submits the note. No typing required
 - The note list refreshes instantly after submission and the lead's `updatedAt` timestamp is reset, clearing any active stale warning
 
 ### Security
@@ -116,7 +116,7 @@ Authentication is handled via **cookie-based JWTs** (httpOnly, secure) so no tok
 - JWT verified on every protected route via `protect` middleware
 - CORS locked to the configured frontend URL only
 - `httpOnly` + `secure` + `SameSite=None` cookies for cross-origin deployments
-- **Rate limiting** on API routes via [Upstash Redis](https://upstash.com/) — limits each IP to a configurable number of requests per window to prevent abuse and brute-force attacks
+- **Rate limiting** on API routes via [Upstash Redis](https://upstash.com/) limits each IP to a configurable number of requests per window to prevent abuse and brute-force attacks
 
 ---
 
@@ -143,10 +143,20 @@ npm install
 Create your `.env` file (see [Environment Variables](#environment-variables) below):
 
 ```bash
-cp .env.template .env
-# Edit .env with your values
+MONGODB_URI=`mongodb://localhost:27017/crm`
+PORT=5000
+JWT_SECRET=`super_secret_123`
+FRONTEND_URL=`http://localhost:5173`    
 ```
+### Optional: Redis Caching (Upstash)
+This project implements a Redis caching layer to optimize the Dashboard metrics API. 
 
+If you do not provide these variables, the application will **gracefully fall back** to querying the MongoDB database directly. To test the caching layer locally, you can create a free Redis database at [Upstash](https://upstash.com/).
+
+| Variable | Description | Example |
+| :--- | :--- | :--- |
+| `UPSTASH_REDIS_REST_URL` | Upstash Redis REST endpoint | `https://logical-donkey-12345.upstash.io` |
+| `UPSTASH_REDIS_REST_TOKEN` | Upstash REST Token | `AXcASdasd...` |
 Start the development server:
 
 ```bash
@@ -220,7 +230,7 @@ The backend automatically seeds a default admin user on startup if it doesn't al
 
 ---
 
-## 🗄 Database Setup
+## Database Setup
 
 This app uses **MongoDB**. No manual schema migration is needed — Mongoose handles collection creation automatically.
 
