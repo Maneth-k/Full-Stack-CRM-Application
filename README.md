@@ -1,6 +1,6 @@
 # Velocity CRM
 
-A full-stack Customer Relationship Management (CRM) application built for small sales teams. Track leads across a visual Kanban pipeline, monitor revenue metrics on a live dashboard, and manage contact activity — all from a sleek, dark-themed interface.
+A full-stack Customer Relationship Management (CRM) application built for small sales teams. Track leads across a visual Kanban pipeline, monitor revenue metrics on a live dashboard, and manage contact activity all from a sleek, dark-themed interface.
 
 ---
 
@@ -13,6 +13,7 @@ A full-stack Customer Relationship Management (CRM) application built for small 
 - [Environment Variables](#environment-variables)
 - [Test Login Credentials](#test-login-credentials)
 - [Database Setup](#database-setup)
+- [Seeding the Database](#seeding-the-database)
 - [API Endpoints](#api-endpoints)
 - [Known Limitations](#known-limitations)
 - [Reflection](#reflection)
@@ -27,6 +28,8 @@ Velocity CRM is a production-style, secure CRM built with the **MERN stack** (Mo
 - Drill into individual lead profiles to update status and log activity notes
 - Monitor key sales metrics (pipeline value, won revenue, lead counts) from a live dashboard
 - Filter and search leads by name, company, email, source, or assigned salesperson
+- Automatically detect and visually flag stale leads that need follow-up
+- Log common sales touch-points with a single click via canned note buttons
 
 Authentication is handled via **cookie-based JWTs** (httpOnly, secure) so no token is ever exposed to client-side JavaScript.
 
@@ -44,6 +47,7 @@ Authentication is handled via **cookie-based JWTs** (httpOnly, secure) so no tok
 | **jsonwebtoken (JWT)** | Auth token generation |
 | **cookie-parser** | Reading httpOnly cookies |
 | **cors** | Cross-origin request handling |
+| **@upstash/ratelimit + @upstash/redis** | Redis-backed API rate limiting |
 | **nodemon** | Dev auto-reload |
 
 ### Frontend
@@ -65,7 +69,7 @@ Authentication is handled via **cookie-based JWTs** (httpOnly, secure) so no tok
 
 ### Authentication
 - Secure login with email and password
-- JWT stored in an `httpOnly` cookie — never accessible from JavaScript
+- JWT stored in an `httpOnly` cookie never accessible from JavaScript
 - Session persistence via `GET /api/auth/me` on page load
 - Protected routes with automatic redirect to `/login`
 - One-click logout that clears the server-side cookie
@@ -80,7 +84,7 @@ Authentication is handled via **cookie-based JWTs** (httpOnly, secure) so no tok
 ###  Kanban Board (Lead Management)
 - Six-column pipeline: `New → Contacted → Qualified → Proposal Sent → Won → Lost`
 - **Drag-and-drop** to move leads between stages (powered by @dnd-kit)
-- Optimistic UI updates — the board updates instantly; rolls back on API failure
+- Optimistic UI updates the board updates instantly; rolls back on API failure
 - **Search**: real-time debounced search across name, company, and email
 - **Filter by Source**: Website, LinkedIn, Referral, Cold Email, Event
 - **Filter by Assigned Salesperson**: dynamic dropdown populated from the user list
@@ -94,11 +98,25 @@ Authentication is handled via **cookie-based JWTs** (httpOnly, secure) so no tok
 - Inline status change via dropdown
 - **Notes / Activity Log**: timestamped internal notes per lead, showing the author's email
 
+### ⚠️ Stale Lead Detection
+- Any lead in an active pipeline stage (`Contacted`, `Qualified`, or `Proposal Sent`) that has **not had a note added in the last 5 days** is automatically flagged
+- The Kanban card receives a **glowing red border** (`ring-2 ring-red-400`) and a distinct red background (`bg-red-50`)
+- A **"⚠️ Needs Follow-up"** badge is rendered at the top of the card so it stands out at a glance
+- The stale timer **resets automatically** when any note (including a canned note) is added — the backend updates `lead.updatedAt` on every `POST /api/leads/:id/notes` request
+- Leads with status `New`, `Won`, or `Lost` are intentionally excluded from this check
+
+### ⚡ One-Click Canned Notes
+- Three pill-shaped quick-action buttons are displayed directly above the "Add Note" text area on the Lead Detail page
+- Available options: **Left Voicemail**, **Sent Pricing**, **Follow up next week**
+- Clicking a button immediately fires a POST request and submits the note — no typing required
+- The note list refreshes instantly after submission and the lead's `updatedAt` timestamp is reset, clearing any active stale warning
+
 ### Security
 - Passwords hashed with bcryptjs (salt rounds: 10)
 - JWT verified on every protected route via `protect` middleware
 - CORS locked to the configured frontend URL only
 - `httpOnly` + `secure` + `SameSite=None` cookies for cross-origin deployments
+- **Rate limiting** on API routes via [Upstash Redis](https://upstash.com/) — limits each IP to a configurable number of requests per window to prevent abuse and brute-force attacks
 
 ---
 
@@ -173,6 +191,10 @@ The frontend will start on **http://localhost:5173**.
 | `MONGODB_URI` | MongoDB connection string | `mongodb://localhost:27017/crm` |
 | `JWT_SECRET` | Secret key for signing JWTs — **change this in production** | `your_super_secret_jwt_key` |
 | `FRONTEND_URL` | Allowed CORS origin | `http://localhost:5173` |
+| `UPSTASH_REDIS_REST_URL` | REST URL from your Upstash Redis database | `https://xxxx.upstash.io` |
+| `UPSTASH_REDIS_REST_TOKEN` | Auth token from your Upstash Redis database | `AXxx...` |
+
+> **Note:** The `UPSTASH_*` variables are required for the rate limiter. Create a free database at [console.upstash.com](https://console.upstash.com) and copy the REST URL and token from the dashboard.
 
 ### Frontend (`frontend/.env`)
 
@@ -228,6 +250,27 @@ MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/crm?r
 
 ---
 
+## Seeding the Database
+
+A seed script is included to populate the database with **50 realistic fake leads** for development and demo purposes. Leads are generated with a randomised mix of statuses, sources, deal values, and `updatedAt` timestamps — roughly half will be "stale" (older than 5 days) so the Stale Lead Detection feature is immediately visible.
+
+> **Prerequisites:** Run `npm run dev` at least once first so the admin user is auto-seeded into the `users` collection.
+
+```bash
+cd backend
+npx ts-node src/seed.ts
+```
+
+This script:
+1. Clears all existing leads from the database
+2. Fetches all existing user IDs to assign leads to
+3. Inserts 50 fake leads with realistic data via `faker-js`
+4. Bypasses Mongoose's auto-timestamp to preserve the fake `updatedAt` dates
+
+> **Note:** `src/seed.ts` is listed in `.gitignore` and will not be committed to version control.
+
+---
+
 ## 📡 API Endpoints
 
 All protected routes require a valid JWT cookie (set automatically after login).
@@ -271,6 +314,8 @@ This project was built as a learning exercise in full-stack TypeScript developme
 - The drag-and-drop Kanban with optimistic UI updates gives the app a genuinely responsive feel — the `@dnd-kit` library made this achievable without heavy boilerplate.
 - Using Mongoose aggregation pipelines for the dashboard kept the analytics logic on the database tier where it belongs, rather than pulling all records and computing in Node.js.
 - The debounced search with server-side filtering keeps the API efficient and avoids client-side filtering of potentially large datasets.
+- **Stale Lead Detection** is a clean example of pure client-side date math paired with a backend side-effect (touching `updatedAt` on note creation) to create a self-resetting workflow automation — no cron jobs or extra DB queries required.
+- Integrating **Upstash** for rate limiting was straightforward and avoids the need to run a local Redis instance, keeping the dev environment simple.
 
 **What could be improved:**
 - **Testing**: the project has no automated test suite (unit or integration). Adding Jest + Supertest for the API and Vitest + React Testing Library for the UI would significantly improve confidence in the codebase.
@@ -278,3 +323,4 @@ This project was built as a learning exercise in full-stack TypeScript developme
 - **Error handling**: error responses from the API are functional but not standardised. A consistent error envelope format (e.g., `{ success, message, errors }`) would make frontend handling cleaner.
 - **Pagination & sorting**: for a real sales team with hundreds of leads, server-side pagination is essential.
 - **Deployment automation**: the frontend is configured for Vercel (`vercel.json`) but the backend deployment pipeline (e.g., Render, Railway) is not documented or automated.
+- **Canned notes extensibility**: the three canned note options are currently hard-coded in the component. A future improvement would be to make them configurable per user or organisation via a settings page.
