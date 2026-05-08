@@ -182,7 +182,7 @@ The application is deployed across two platforms:
 
 ```bash
 git clone https://github.com/Maneth-k/Full-Stack-CRM-Application.git
-cd "Torch labs"
+cd "full-stack-crm-application"
 ```
 
 ### 2. Set up the Backend
