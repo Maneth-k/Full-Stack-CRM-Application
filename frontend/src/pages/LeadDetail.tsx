@@ -38,6 +38,15 @@ export const LeadDetail = () => {
     }
   };
 
+  const handleCannedNote = async (content: string) => {
+    try {
+      await api.post(`/leads/${id}/notes`, { content });
+      fetchLeadData();
+    } catch (error) {
+      console.error('Failed to add canned note', error);
+    }
+  };
+
   const handleAddNote = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newNote.trim()) return;
@@ -143,6 +152,20 @@ export const LeadDetail = () => {
         <section className="flex flex-col gap-4">
           <h3 className="text-lg font-medium text-[#e5e5e5]">Activity & Notes</h3>
           <div className="bg-[#0d0d0d] border border-[#333333] rounded-xl p-6 flex flex-col h-full min-h-[500px]">
+            {/* Canned Notes Area */}
+            <div className="mb-2 flex gap-2 overflow-x-auto pb-2">
+              {['Left Voicemail', 'Sent Pricing', 'Follow up next week'].map((noteText) => (
+                <button
+                  key={noteText}
+                  type="button"
+                  onClick={() => handleCannedNote(noteText)}
+                  className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium hover:bg-blue-200 transition-colors whitespace-nowrap"
+                >
+                  {noteText}
+                </button>
+              ))}
+            </div>
+            
             {/* Note Input Area */}
             <form onSubmit={handleAddNote} className="mb-6">
               <textarea 

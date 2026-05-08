@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Note from '../models/Note';
+import Lead from '../models/Lead';
 
 export const getNotes = async (req: Request, res: Response) => {
   try {
@@ -20,6 +21,9 @@ export const createNote = async (req: Request, res: Response) => {
       createdBy: (req as any).user.id
     });
     const savedNote = await note.save();
+
+    await Lead.findByIdAndUpdate(req.params.id, { updatedAt: new Date() });
+
     res.status(201).json(savedNote);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });

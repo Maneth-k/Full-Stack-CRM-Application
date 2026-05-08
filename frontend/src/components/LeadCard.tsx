@@ -28,6 +28,9 @@ const LeadCard: React.FC<LeadCardProps> = ({ lead, onEdit, onDelete }) => {
     transition,
   };
 
+  const isStale = ['Contacted', 'Qualified', 'Proposal Sent'].includes(lead.status) &&
+    (Date.now() - new Date(lead.updatedAt).getTime() > 432_000_000);
+
   const handleCardClick = (e: React.MouseEvent) => {
     if (!(e.target as HTMLElement).closest('.card-menu-area')) {
       navigate(`/leads/${lead._id}`);
@@ -58,19 +61,27 @@ const LeadCard: React.FC<LeadCardProps> = ({ lead, onEdit, onDelete }) => {
       {...attributes}
       {...listeners}
       onClick={handleCardClick}
-      className={`relative bg-brand-surface p-space-md border border-brand-border hover:shadow-[0px_10px_20px_rgba(254,73,0,0.15)] transition-all cursor-grab group
+      className={`relative p-space-md border transition-all cursor-grab group
         ${isDragging ? 'opacity-50 rotate-2 scale-105 z-50 ring-1 ring-brand-orange shadow-[0px_10px_20px_rgba(254,73,0,0.3)]' : 'opacity-100'}
+        ${isStale ? 'bg-red-50 ring-2 ring-red-400 border-red-200 hover:shadow-[0px_10px_20px_rgba(248,113,113,0.15)]' : 'bg-brand-surface border-brand-border hover:shadow-[0px_10px_20px_rgba(254,73,0,0.15)]'}
       `}
     >
+      {isStale && (
+        <div className="mb-3">
+          <span className="inline-block bg-red-100 text-red-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">
+            ⚠️ Needs Follow-up
+          </span>
+        </div>
+      )}
       <div className="flex justify-between items-start mb-2">
-        <span className="bg-brand-border text-brand-text-sec px-2 py-0.5 text-[10px] font-bold uppercase truncate max-w-[100px]">
+        <span className={`px-2 py-0.5 text-[10px] font-bold uppercase truncate max-w-[100px] ${isStale ? 'bg-red-200 text-red-800' : 'bg-brand-border text-brand-text-sec'}`}>
           {lead.source || 'INBOUND'}
         </span>
-        <span className="font-label-bold text-[14px] text-brand-white">${lead.dealValue?.toLocaleString() || 0}</span>
+        <span className={`font-label-bold text-[14px] ${isStale ? 'text-red-900' : 'text-brand-white'}`}>${lead.dealValue?.toLocaleString() || 0}</span>
       </div>
       
-      <h3 className="font-headline-md text-[18px] mb-1 text-brand-white">{lead.name}</h3>
-      <p className="font-body-md text-[16px] text-brand-text-sec mb-4">{lead.company}</p>
+      <h3 className={`font-headline-md text-[18px] mb-1 ${isStale ? 'text-red-900' : 'text-brand-white'}`}>{lead.name}</h3>
+      <p className={`font-body-md text-[16px] mb-4 ${isStale ? 'text-red-700' : 'text-brand-text-sec'}`}>{lead.company}</p>
       
       <div className="flex justify-between items-center relative z-10">
         <div className="flex flex-col gap-1">
