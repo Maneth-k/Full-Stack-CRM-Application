@@ -47,36 +47,39 @@ Authentication is handled via **cookie-based JWTs** (httpOnly, secure) so no tok
 ## Tech Stack
 
 ### Backend
-| Technology | Purpose |
-|---|---|
-| **Node.js + Express** | REST API server |
-| **TypeScript** | Strict type safety |
-| **MongoDB + Mongoose** | Database & ODM |
-| **bcryptjs** | Password hashing |
-| **jsonwebtoken (JWT)** | Auth token generation |
-| **cookie-parser** | Reading httpOnly cookies |
-| **cors** | Cross-origin request handling |
+
+| Technology                              | Purpose                        |
+| --------------------------------------- | ------------------------------ |
+| **Node.js + Express**                   | REST API server                |
+| **TypeScript**                          | Strict type safety             |
+| **MongoDB + Mongoose**                  | Database & ODM                 |
+| **bcryptjs**                            | Password hashing               |
+| **jsonwebtoken (JWT)**                  | Auth token generation          |
+| **cookie-parser**                       | Reading httpOnly cookies       |
+| **cors**                                | Cross-origin request handling  |
 | **@upstash/ratelimit + @upstash/redis** | Redis-backed API rate limiting |
-| **nodemon** | Dev auto-reload |
+| **nodemon**                             | Dev auto-reload                |
 
 ### Frontend
-| Technology | Purpose |
-|---|---|
-| **React 19 + Vite** | UI framework & build tool |
-| **TypeScript** | Type-safe components |
-| **Tailwind CSS v4** | Utility-first styling |
-| **React Router v7** | Client-side routing |
-| **Axios** | HTTP client (with `withCredentials`) |
-| **@dnd-kit** | Drag-and-drop Kanban board |
-| **Chart.js + react-chartjs-2** | Dashboard analytics charts |
-| **react-hot-toast** | Toast notifications |
-| **lucide-react** | Icon library |
+
+| Technology                     | Purpose                              |
+| ------------------------------ | ------------------------------------ |
+| **React 19 + Vite**            | UI framework & build tool            |
+| **TypeScript**                 | Type-safe components                 |
+| **Tailwind CSS v4**            | Utility-first styling                |
+| **React Router v7**            | Client-side routing                  |
+| **Axios**                      | HTTP client (with `withCredentials`) |
+| **@dnd-kit**                   | Drag-and-drop Kanban board           |
+| **Chart.js + react-chartjs-2** | Dashboard analytics charts           |
+| **react-hot-toast**            | Toast notifications                  |
+| **lucide-react**               | Icon library                         |
 
 ---
 
 ## Features
 
 ### Authentication
+
 - Secure login with email and password
 - JWT stored in an `httpOnly` cookie never accessible from JavaScript
 - Session persistence via `GET /api/auth/me` on page load
@@ -84,13 +87,15 @@ Authentication is handled via **cookie-based JWTs** (httpOnly, secure) so no tok
 - One-click logout that clears the server-side cookie
 
 ### Dashboard
+
 - Live metrics: Total Leads, New Leads, Qualified Leads, Won Leads, Lost Leads
 - Pipeline Value: sum of all active (non-Won/Lost) deal values
 - Total Revenue: sum of Won deal values only
 - Interactive bar chart showing lead distribution by status
 - **Drill-down modals**: clicking any metric card opens a filtered lead list with direct links to lead profiles
 
-###  Kanban Board (Lead Management)
+### Kanban Board (Lead Management)
+
 - Six-column pipeline: `New → Contacted → Qualified → Proposal Sent → Won → Lost`
 - **Drag-and-drop** to move leads between stages (powered by @dnd-kit)
 - Optimistic UI updates the board updates instantly; rolls back on API failure
@@ -102,25 +107,29 @@ Authentication is handled via **cookie-based JWTs** (httpOnly, secure) so no tok
 - Delete leads with a confirmation prompt
 
 ### Lead Detail View
+
 - Visual progress tracker showing the lead's current stage in the pipeline
 - Full lead info: company, contact details, source, deal value, creation date
 - Inline status change via dropdown
 - **Notes / Activity Log**: timestamped internal notes per lead, showing the author's email
 
 ### Stale Lead Detection
+
 - Any lead in an active pipeline stage (`Contacted`, `Qualified`, or `Proposal Sent`) that has **not had a note added in the last 5 days** is automatically flagged
-- The Kanban card receives a **glowing red border** 
+- The Kanban card receives a **glowing red border**
 - A **"Needs Follow-up"** badge is rendered at the top of the card so it stands out at a glance
 - The stale timer **resets automatically** when any note (including a canned note) is added the backend updates `lead.updatedAt` on every `POST /api/leads/:id/notes` request
 - Leads with status `New`, `Won`, or `Lost` are intentionally excluded from this check
 
 ### One-Click Canned Notes
+
 - Three pill-shaped quick-action buttons are displayed directly above the "Add Note" text area on the Lead Detail page
 - Available options: **Left Voicemail**, **Sent Pricing**, **Follow up next week**
 - Clicking a button immediately fires a POST request and submits the note. No typing required
 - The note list refreshes instantly after submission and the lead's `updatedAt` timestamp is reset, clearing any active stale warning
 
 ### Security
+
 - Passwords hashed with bcryptjs (salt rounds: 10)
 - JWT verified on every protected route via `protect` middleware
 - CORS locked to the configured frontend URL only
@@ -133,12 +142,13 @@ Authentication is handled via **cookie-based JWTs** (httpOnly, secure) so no tok
 
 The application is deployed across two platforms:
 
-| Layer | Platform | URL |
-|---|---|---|
-| **Frontend** | Vercel | [https://full-stack-crm-application-sx7m.vercel.app/](https://full-stack-crm-application-sx7m.vercel.app/) |
-| **Backend API** | Railway | [https://full-stack-crm-application-production.up.railway.app](https://full-stack-crm-application-production.up.railway.app) |
+| Layer           | Platform | URL                                                                                                                          |
+| --------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| **Frontend**    | Vercel   | [https://full-stack-crm-application-sx7m.vercel.app/](https://full-stack-crm-application-sx7m.vercel.app/)                   |
+| **Backend API** | Railway  | [https://full-stack-crm-application-production.up.railway.app](https://full-stack-crm-application-production.up.railway.app) |
 
 ### Frontend (Vercel)
+
 - Deployed automatically from the `frontend/` directory
 - Set the `VITE_BACKEND_URL` environment variable in the Vercel project settings to point to the Railway backend URL:
   ```
@@ -146,23 +156,25 @@ The application is deployed across two platforms:
   ```
 
 ### Backend (Railway)
+
 - Deployed from the `backend/` directory
 - Configure the following environment variables in the Railway project settings:
 
-| Variable | Value |
-|---|---|
-| `PORT` | `5000` (Railway may override this automatically) |
-| `MONGODB_URI` | Your MongoDB Atlas connection string |
-| `JWT_SECRET` | A strong, random secret key |
-| `FRONTEND_URL` | `https://full-stack-crm-application-sx7m.vercel.app` |
-| `UPSTASH_REDIS_REST_URL` | Your Upstash Redis REST URL (optional) |
-| `UPSTASH_REDIS_REST_TOKEN` | Your Upstash Redis token (optional) |
+| Variable                   | Value                                                |
+| -------------------------- | ---------------------------------------------------- |
+| `PORT`                     | `5000` (Railway may override this automatically)     |
+| `MONGODB_URI`              | Your MongoDB Atlas connection string                 |
+| `JWT_SECRET`               | A strong, random secret key                          |
+| `FRONTEND_URL`             | `https://full-stack-crm-application-sx7m.vercel.app` |
+| `UPSTASH_REDIS_REST_URL`   | Your Upstash Redis REST URL (optional)               |
+| `UPSTASH_REDIS_REST_TOKEN` | Your Upstash Redis token (optional)                  |
 
 ---
 
-##  How to Run Locally
+## How to Run Locally
 
 ### Prerequisites
+
 - [Node.js](https://nodejs.org/) v18+
 - [MongoDB](https://www.mongodb.com/try/download/community) running locally **or** a [MongoDB Atlas](https://www.mongodb.com/atlas) cluster URI
 
@@ -186,17 +198,19 @@ Create your `.env` file (see [Environment Variables](#environment-variables) bel
 MONGODB_URI=`mongodb://localhost:27017/crm`
 PORT=5000
 JWT_SECRET=`super_secret_123`
-FRONTEND_URL=`http://localhost:5173`    
+FRONTEND_URL=`http://localhost:5173`
 ```
+
 ### Optional: Redis Caching (Upstash)
-This project implements a Redis caching layer to optimize the Dashboard metrics API. 
+
+This project implements a Redis caching layer to optimize the Dashboard metrics API.
 
 If you do not provide these variables, the application will **gracefully fall back** to querying the MongoDB database directly. To test the caching layer locally, you can create a free Redis database at [Upstash](https://upstash.com/).
 
-| Variable | Description | Example |
-| :--- | :--- | :--- |
-| `UPSTASH_REDIS_REST_URL` | Upstash Redis REST endpoint | `https://logical-donkey-12345.upstash.io` |
-| `UPSTASH_REDIS_REST_TOKEN` | Upstash REST Token | `AXcASdasd...` |
+| Variable                   | Description                 | Example                                   |
+| :------------------------- | :-------------------------- | :---------------------------------------- |
+| `UPSTASH_REDIS_REST_URL`   | Upstash Redis REST endpoint | `https://logical-donkey-12345.upstash.io` |
+| `UPSTASH_REDIS_REST_TOKEN` | Upstash REST Token          | `AXcASdasd...`                            |
 
 ```bash
 npm run dev
@@ -234,21 +248,21 @@ The frontend will start on **http://localhost:5173**.
 
 ### Backend (`backend/.env`)
 
-| Variable | Description | Example |
-|---|---|---|
-| `PORT` | Port the Express server listens on | `5000` |
-| `MONGODB_URI` | MongoDB connection string | `mongodb://localhost:27017/crm` |
-| `JWT_SECRET` | Secret key for signing JWTs — **change this in production** | `your_super_secret_jwt_key` |
-| `FRONTEND_URL` | Allowed CORS origin | `http://localhost:5173` |
-| `UPSTASH_REDIS_REST_URL` | REST URL from your Upstash Redis database | `https://xxxx.upstash.io` |
-| `UPSTASH_REDIS_REST_TOKEN` | Auth token from your Upstash Redis database | `AXxx...` |
+| Variable                   | Description                                                 | Example                         |
+| -------------------------- | ----------------------------------------------------------- | ------------------------------- |
+| `PORT`                     | Port the Express server listens on                          | `5000`                          |
+| `MONGODB_URI`              | MongoDB connection string                                   | `mongodb://localhost:27017/crm` |
+| `JWT_SECRET`               | Secret key for signing JWTs — **change this in production** | `your_super_secret_jwt_key`     |
+| `FRONTEND_URL`             | Allowed CORS origin                                         | `http://localhost:5173`         |
+| `UPSTASH_REDIS_REST_URL`   | REST URL from your Upstash Redis database                   | `https://xxxx.upstash.io`       |
+| `UPSTASH_REDIS_REST_TOKEN` | Auth token from your Upstash Redis database                 | `AXxx...`                       |
 
 > **Note:** The `UPSTASH_*` variables are required for the rate limiter. Create a free database at [console.upstash.com](https://console.upstash.com) and copy the REST URL and token from the dashboard.
 
 ### Frontend (`frontend/.env`)
 
-| Variable | Description | Example |
-|---|---|---|
+| Variable           | Description                  | Example                     |
+| ------------------ | ---------------------------- | --------------------------- |
 | `VITE_BACKEND_URL` | Base URL for the backend API | `http://localhost:5000/api` |
 
 > **Note:** If `VITE_BACKEND_URL` is not set, the Axios client defaults to `http://localhost:5000/api`.
@@ -259,11 +273,11 @@ The frontend will start on **http://localhost:5173**.
 
 The backend automatically seeds a default admin user on startup if it doesn't already exist:
 
-| Field | Value |
-|---|---|
-| **Email** | `admin@example.com` |
-| **Password** | `password123` |
-| **Role** | `admin` |
+| Field        | Value               |
+| ------------ | ------------------- |
+| **Email**    | `admin@example.com` |
+| **Password** | `password123`       |
+| **Role**     | `admin`             |
 
 > You can create additional users directly in the MongoDB database if needed.
 
@@ -291,11 +305,11 @@ MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/crm?r
 
 ### Collections Created Automatically
 
-| Collection | Description |
-|---|---|
-| `users` | Salesperson accounts (email, hashed password, role) |
-| `leads` | Lead records with status, source, deal value, and assigned user |
-| `notes` | Activity notes linked to a lead and the user who created them |
+| Collection | Description                                                     |
+| ---------- | --------------------------------------------------------------- |
+| `users`    | Salesperson accounts (email, hashed password, role)             |
+| `leads`    | Lead records with status, source, deal value, and assigned user |
+| `notes`    | Activity notes linked to a lead and the user who created them   |
 
 ---
 
@@ -311,6 +325,7 @@ npx ts-node src/seed.ts
 ```
 
 This script:
+
 1. Clears all existing leads from the database
 2. Fetches all existing user IDs to assign leads to
 3. Inserts 50 fake leads with realistic data via `faker-js`
@@ -324,20 +339,20 @@ This script:
 
 All protected routes require a valid JWT cookie (set automatically after login).
 
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| `POST` | `/api/auth/login` | ❌ | Login sets httpOnly JWT cookie |
-| `POST` | `/api/auth/logout` | ❌ | Logout clears cookie |
-| `GET` | `/api/auth/me` | ✅ | Returns current user profile |
-| `GET` | `/api/auth/users` | ✅ | Lists all users (for salesperson filter) |
-| `GET` | `/api/leads` | ✅ | List leads supports `?search=`, `?status=`, `?source=`, `?assignedTo=` |
-| `POST` | `/api/leads` | ✅ | Create a new lead |
-| `GET` | `/api/leads/:id` | ✅ | Get a single lead by ID |
-| `PUT` | `/api/leads/:id` | ✅ | Update a lead |
-| `DELETE` | `/api/leads/:id` | ✅ | Delete a lead |
-| `GET` | `/api/leads/:id/notes` | ✅ | Get all notes for a lead |
-| `POST` | `/api/leads/:id/notes` | ✅ | Add a note to a lead |
-| `GET` | `/api/dashboard/stats` | ✅ | Aggregated dashboard metrics |
+| Method   | Endpoint               | Auth | Description                                                            |
+| -------- | ---------------------- | ---- | ---------------------------------------------------------------------- |
+| `POST`   | `/api/auth/login`      | ❌   | Login sets httpOnly JWT cookie                                         |
+| `POST`   | `/api/auth/logout`     | ❌   | Logout clears cookie                                                   |
+| `GET`    | `/api/auth/me`         | ✅   | Returns current user profile                                           |
+| `GET`    | `/api/auth/users`      | ✅   | Lists all users (for salesperson filter)                               |
+| `GET`    | `/api/leads`           | ✅   | List leads supports `?search=`, `?status=`, `?source=`, `?assignedTo=` |
+| `POST`   | `/api/leads`           | ✅   | Create a new lead                                                      |
+| `GET`    | `/api/leads/:id`       | ✅   | Get a single lead by ID                                                |
+| `PUT`    | `/api/leads/:id`       | ✅   | Update a lead                                                          |
+| `DELETE` | `/api/leads/:id`       | ✅   | Delete a lead                                                          |
+| `GET`    | `/api/leads/:id/notes` | ✅   | Get all notes for a lead                                               |
+| `POST`   | `/api/leads/:id/notes` | ✅   | Add a note to a lead                                                   |
+| `GET`    | `/api/dashboard/stats` | ✅   | Aggregated dashboard metrics                                           |
 
 ---
 
@@ -359,6 +374,7 @@ All protected routes require a valid JWT cookie (set automatically after login).
 This project was built as a learning exercise in full-stack TypeScript development with a focus on security, clean architecture, and real-world patterns.
 
 **What went well:**
+
 - Cookie-based JWT auth is a more secure pattern than localStorage tokens, and implementing it end-to-end (Express → httpOnly cookie → Axios `withCredentials`) was a valuable experience.
 - The drag-and-drop Kanban with optimistic UI updates gives the app a genuinely responsive feel — the `@dnd-kit` library made this achievable without heavy boilerplate.
 - Using Mongoose aggregation pipelines for the dashboard kept the analytics logic on the database tier where it belongs, rather than pulling all records and computing in Node.js.
@@ -367,6 +383,7 @@ This project was built as a learning exercise in full-stack TypeScript developme
 - Integrating **Upstash** for rate limiting was straightforward and avoids the need to run a local Redis instance, keeping the dev environment simple.
 
 **What could be improved:**
+
 - **Testing**: the project has no automated test suite (unit or integration). Adding Jest + Supertest for the API and Vitest + React Testing Library for the UI would significantly improve confidence in the codebase.
 - **RBAC**: enforcing role-based permissions at the middleware level (e.g., only admins can delete leads, sales reps can only see their own) would make this production-ready.
 - **Error handling**: error responses from the API are functional but not standardised. A consistent error envelope format (e.g., `{ success, message, errors }`) would make frontend handling cleaner.

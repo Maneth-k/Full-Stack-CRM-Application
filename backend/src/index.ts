@@ -32,11 +32,11 @@ app.use("/api/dashboard", dashboardRoutes);
 
 const seedAdmin = async () => {
   try {
-    const adminExists = await User.findOne({ email: "dummy2@example.com" });
+    const adminExists = await User.findOne({ email: "admin@example.com" });
     if (!adminExists) {
       const hashedPassword = await bcrypt.hash("password123", 10);
       await User.create({
-        email: "dummy2@example.com",
+        email: "admin@example.com",
         password: hashedPassword,
         role: "admin",
       });
