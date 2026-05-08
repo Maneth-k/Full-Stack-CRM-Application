@@ -2,6 +2,8 @@
 
 A full-stack Customer Relationship Management (CRM) application built for small sales teams. Track leads across a visual Kanban pipeline, monitor revenue metrics on a live dashboard, and manage contact activity all from a sleek, dark-themed interface.
 
+**Live Demo:** [https://full-stack-crm-application-sx7m.vercel.app/](https://full-stack-crm-application-sx7m.vercel.app/)
+
 ---
 
 ## Table of Contents
@@ -9,6 +11,7 @@ A full-stack Customer Relationship Management (CRM) application built for small 
 - [Project Overview](#project-overview)
 - [Tech Stack](#tech-stack)
 - [Features](#features)
+- [Deployment](#deployment)
 - [How to Run Locally](#how-to-run-locally)
 - [Environment Variables](#environment-variables)
 - [Test Login Credentials](#test-login-credentials)
@@ -120,6 +123,37 @@ Authentication is handled via **cookie-based JWTs** (httpOnly, secure) so no tok
 
 ---
 
+## Deployment
+
+The application is deployed across two platforms:
+
+| Layer | Platform | URL |
+|---|---|---|
+| **Frontend** | Vercel | [https://full-stack-crm-application-sx7m.vercel.app/](https://full-stack-crm-application-sx7m.vercel.app/) |
+| **Backend API** | Railway | [https://full-stack-crm-application-production.up.railway.app](https://full-stack-crm-application-production.up.railway.app) |
+
+### Frontend (Vercel)
+- Deployed automatically from the `frontend/` directory
+- Set the `VITE_BACKEND_URL` environment variable in the Vercel project settings to point to the Railway backend URL:
+  ```
+  VITE_BACKEND_URL=https://full-stack-crm-application-production.up.railway.app/api
+  ```
+
+### Backend (Railway)
+- Deployed from the `backend/` directory
+- Configure the following environment variables in the Railway project settings:
+
+| Variable | Value |
+|---|---|
+| `PORT` | `5000` (Railway may override this automatically) |
+| `MONGODB_URI` | Your MongoDB Atlas connection string |
+| `JWT_SECRET` | A strong, random secret key |
+| `FRONTEND_URL` | `https://full-stack-crm-application-sx7m.vercel.app` |
+| `UPSTASH_REDIS_REST_URL` | Your Upstash Redis REST URL (optional) |
+| `UPSTASH_REDIS_REST_TOKEN` | Your Upstash Redis token (optional) |
+
+---
+
 ##  How to Run Locally
 
 ### Prerequisites
@@ -157,7 +191,6 @@ If you do not provide these variables, the application will **gracefully fall ba
 | :--- | :--- | :--- |
 | `UPSTASH_REDIS_REST_URL` | Upstash Redis REST endpoint | `https://logical-donkey-12345.upstash.io` |
 | `UPSTASH_REDIS_REST_TOKEN` | Upstash REST Token | `AXcASdasd...` |
-Start the development server:
 
 ```bash
 npm run dev
@@ -287,11 +320,11 @@ All protected routes require a valid JWT cookie (set automatically after login).
 
 | Method | Endpoint | Auth | Description |
 |---|---|---|---|
-| `POST` | `/api/auth/login` | ❌ | Login — sets httpOnly JWT cookie |
-| `POST` | `/api/auth/logout` | ❌ | Logout — clears cookie |
+| `POST` | `/api/auth/login` | ❌ | Login sets httpOnly JWT cookie |
+| `POST` | `/api/auth/logout` | ❌ | Logout clears cookie |
 | `GET` | `/api/auth/me` | ✅ | Returns current user profile |
 | `GET` | `/api/auth/users` | ✅ | Lists all users (for salesperson filter) |
-| `GET` | `/api/leads` | ✅ | List leads — supports `?search=`, `?status=`, `?source=`, `?assignedTo=` |
+| `GET` | `/api/leads` | ✅ | List leads supports `?search=`, `?status=`, `?source=`, `?assignedTo=` |
 | `POST` | `/api/leads` | ✅ | Create a new lead |
 | `GET` | `/api/leads/:id` | ✅ | Get a single lead by ID |
 | `PUT` | `/api/leads/:id` | ✅ | Update a lead |
