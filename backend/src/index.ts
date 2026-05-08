@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import dotenv from "dotenv";
+import "./config/envconfig";
 import bcrypt from "bcryptjs";
 import { connectDB } from "./config/db";
 import User from "./models/User";
@@ -9,12 +9,13 @@ import User from "./models/User";
 import authRoutes from "./routes/auth";
 import leadRoutes from "./routes/leads";
 import dashboardRoutes from "./routes/dashboard";
-
-dotenv.config();
+import rateLimitter from "./middleware/ratelimitter";
 
 const app = express();
 
+app.set("trust proxy", 1);
 app.use(express.json());
+app.use(rateLimitter);
 app.use(cookieParser());
 app.use(
   cors({
@@ -24,7 +25,7 @@ app.use(
 );
 app.get("/", (req, res) => {
   res.send("CRM backend is LIVE!!!");
-})
+});
 app.use("/api/auth", authRoutes);
 app.use("/api/leads", leadRoutes);
 app.use("/api/dashboard", dashboardRoutes);

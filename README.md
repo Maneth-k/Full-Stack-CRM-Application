@@ -111,7 +111,7 @@ Authentication is handled via **cookie-based JWTs** (httpOnly, secure) so no tok
 ### 1. Clone the repository
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/Maneth-k/Full-Stack-CRM-Application.git
 cd "Torch labs"
 ```
 
